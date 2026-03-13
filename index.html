@@ -2,95 +2,62 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Cuenta atrás</title>
+<title>Cuenta Atras</title>
 
 <style>
 
 body{
-    background:#0f0f14;
+    background:#0b0b0f;
     color:white;
     font-family:Arial;
     text-align:center;
-}
-
-.container{
-    margin-top:40px;
+    margin-top:80px;
 }
 
 input{
-    padding:8px;
+    padding:10px;
     font-size:16px;
 }
 
 button{
-    padding:8px 15px;
+    padding:10px 15px;
     font-size:16px;
 }
 
-.clock{
-    width:200px;
-    height:200px;
-    border:6px solid white;
-    border-radius:50%;
-    margin:40px auto;
-    position:relative;
+.reloj{
+    font-size:70px;
+    letter-spacing:4px;
+    margin-top:40px;
 }
 
-.hand{
-    position:absolute;
-    bottom:50%;
-    left:50%;
-    transform-origin:bottom;
-    background:white;
+.intervalo{
+    font-size:35px;
+    margin-top:20px;
+    color:#00e5ff;
 }
 
-.hour{
-    width:6px;
-    height:50px;
-}
-
-.minute{
-    width:4px;
-    height:70px;
-}
-
-.second{
-    width:2px;
-    height:90px;
-    background:red;
-}
-
-#intervalo{
-    font-size:30px;
+#mensaje{
+    margin-top:20px;
+    font-size:20px;
+    color:#ffd54f;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
-
-<h2>Cuenta atrás</h2>
+<h2>Reloj</h2>
 
 <input id="nombre" placeholder="Tu nombre">
-<button onclick="iniciar()">Empezar</button>
+<button onclick="iniciar()">Entrar</button>
 
-<p id="mensaje"></p>
+<div id="mensaje"></div>
 
-<div class="clock">
+<div class="reloj" id="reloj"></div>
 
-<div id="hora" class="hand hour"></div>
-<div id="min" class="hand minute"></div>
-<div id="seg" class="hand second"></div>
-
-</div>
-
-<h2>Tiempo hasta 28 marzo 13:00</h2>
-
-<div id="intervalo"></div>
-
-</div>
+<div class="intervalo" id="contador"></div>
 
 <script>
 
@@ -98,40 +65,31 @@ var fechaObjetivo = new Date("March 28, 2026 13:00:00").getTime()
 
 function iniciar(){
 
-    var nombre = document.getElementById("nombre").value
+    var nombre = document.getElementById("nombre").value.toLowerCase()
 
     var lista = {
         "ana":"Bienvenida Ana",
-        "luis":"Hola Luis, tu reloj especial está activo",
-        "pedro":"Pedro tiene acceso al mensaje secreto"
+        "luis":"Luis tiene acceso al reloj especial",
+        "pedro":"Pedro desbloqueó el mensaje secreto"
     }
 
     if(lista[nombre]){
         document.getElementById("mensaje").innerText = lista[nombre]
+    } else {
+        document.getElementById("mensaje").innerText = ""
     }
 
 }
 
-setInterval(function(){
+function actualizar(){
 
     var ahora = new Date()
 
-    var h = ahora.getHours()
-    var m = ahora.getMinutes()
-    var s = ahora.getSeconds()
+    var h = ahora.getHours().toString().padStart(2,'0')
+    var m = ahora.getMinutes().toString().padStart(2,'0')
+    var s = ahora.getSeconds().toString().padStart(2,'0')
 
-    var horaDeg = (h % 12) * 30
-    var minDeg = m * 6
-    var segDeg = s * 6
-
-    document.getElementById("hora").style.transform =
-    "translateX(-50%) rotate(" + horaDeg + "deg)"
-
-    document.getElementById("min").style.transform =
-    "translateX(-50%) rotate(" + minDeg + "deg)"
-
-    document.getElementById("seg").style.transform =
-    "translateX(-50%) rotate(" + segDeg + "deg)"
+    document.getElementById("reloj").innerText = h + ":" + m + ":" + s
 
     var diferencia = fechaObjetivo - ahora.getTime()
 
@@ -140,10 +98,12 @@ setInterval(function(){
     var minutos = Math.floor((diferencia % (1000*60*60)) / (1000*60))
     var segundos = Math.floor((diferencia % (1000*60)) / 1000)
 
-    document.getElementById("intervalo").innerText =
-    dias+"d "+horas+"h "+minutos+"m "+segundos+"s"
+    document.getElementById("contador").innerText =
+    dias + "d " + horas + "h " + minutos + "m " + segundos + "s"
 
-},1000)
+}
+
+setInterval(actualizar,1000)
 
 </script>
 

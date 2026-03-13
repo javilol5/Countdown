@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Reloj y Reloj por Intervalos</title>
+<title>Cuenta atrás Open Madrid Acro</title>
 <style>
 body{
     background:#0b0b0f;
@@ -44,7 +44,7 @@ button{
 </head>
 <body>
 
-<h2>Cuenta atras Open Madrid Acro</h2>
+<h2>Cuenta atrás Open Madrid Acro</h2>
 
 <input id="nombre" placeholder="Tu nombre">
 <button onclick="iniciar()">Entrar</button>
@@ -66,9 +66,6 @@ var lista = {
     "carla":"Carla, Zuri y Atteneri",
     "zuri":"Carla, Zuri y Atteneri",
     "atteneri":"Carla, Zuri y Atteneri",
-    "claudia":"Claudia, Candela y Martina",
-    "candela":"Claudia, Candela y Martina",
-    "martina":"Claudia, Candela y Martina",
     "ainara":"Ainara, Sara e Isis",
     "sara":"Ainara, Sara e Isis",
     "isis":"Ainara, Sara e Isis",
@@ -79,14 +76,15 @@ var lista = {
     "helena":"Sofia, Helena y Alicia",
     "elena":"Sofia, Elena y Alicia",
     "alicia":"Sofia, Elena y Alicia",
-    "javi":"Javi y Martina"
+    "javi":"Javi y Martina",
+    "martina":"Javi y Martina"
 }
 
 // Intervalos por grupo
 var intervalosGrupos = {
     "1_2":[
         {dias:[1,2,4,5], inicio:"18:00", fin:"21:00"},
-        {dias:[6], inicio:"11:00", fin:"14:00"}
+        {dias:[6], inicio:"10:00", fin:"14:00"}
     ],
     "3_4_5_6":[
         {dias:[2,4,5], inicio:"18:00", fin:"21:00"},
@@ -167,13 +165,13 @@ function iniciar(){
     var encontrado = false;
 
     for(var persona in lista){
-        if(similitud(nombre, persona) >= 0.9){
+        if(similitud(nombre, persona) >= 0.6){
             encontrado = true;
             document.getElementById("mensaje").innerText = lista[persona];
 
-            if(["carla","zuri","atteneri","claudia","candela","martina"].includes(persona)){
+            if(["carla","zuri","atteneri"].includes(persona)){
                 grupoActual = "1_2";
-            } else if(["ainara","sara","isis","marta","aitana","leire","sofia","helena","elena","alicia","javi"].includes(persona)){
+            } else if(["ainara","sara","isis","marta","aitana","leire","sofia","helena","elena","alicia","javi","martina"].includes(persona)){
                 grupoActual = "3_4_5_6";
             }
 

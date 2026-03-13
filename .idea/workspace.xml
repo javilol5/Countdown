@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebce573f-21a7-4c8b-aed4-7d3436a608f4" name="Changes" comment="lista medio actualizada">
+    <list default="true" id="ebce573f-21a7-4c8b-aed4-7d3436a608f4" name="Changes" comment="intervaluos de tiempo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
@@ -107,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773393169272</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="intervaluos de tiempo">
+      <option name="closed" value="true" />
+      <created>1773393964953</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773393964953</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -117,6 +125,7 @@
     <MESSAGE value="relog digital" />
     <MESSAGE value="90% nombre" />
     <MESSAGE value="lista medio actualizada" />
-    <option name="LAST_COMMIT_MESSAGE" value="lista medio actualizada" />
+    <MESSAGE value="intervaluos de tiempo" />
+    <option name="LAST_COMMIT_MESSAGE" value="intervaluos de tiempo" />
   </component>
 </project>

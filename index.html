@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Reloj y cuenta atrás</title>
+<title>Reloj y Reloj por Intervalos</title>
 <style>
 body{
     background:#0b0b0f;
     color:white;
     font-family:Arial;
     text-align:center;
-    margin-top:80px;
+    margin-top:50px;
 }
 input{
     padding:10px;
@@ -22,7 +22,7 @@ button{
 .reloj{
     font-size:70px;
     letter-spacing:4px;
-    margin-top:40px;
+    margin-top:30px;
 }
 .intervalo{
     font-size:35px;
@@ -34,8 +34,8 @@ button{
     font-size:20px;
     color:#ffd54f;
 }
-#contadorExtra{
-    font-size:25px;
+#relojIntervalo{
+    font-size:60px;
     margin-top:15px;
     color:#ff6f00;
 }
@@ -43,15 +43,16 @@ button{
 </head>
 <body>
 
-<h2>Reloj Digital y Cuenta Atrás</h2>
+<h2>Reloj Digital y Reloj por Intervalos</h2>
 
 <input id="nombre" placeholder="Tu nombre">
 <button onclick="iniciar()">Entrar</button>
 
 <div id="mensaje"></div>
+
 <div class="reloj" id="reloj"></div>
 <div class="intervalo" id="contador"></div>
-<div class="intervalo" id="contadorExtra"></div>
+<div class="reloj" id="relojIntervalo"></div>
 
 <script>
 // Fecha objetivo
@@ -62,58 +63,35 @@ var lista = {
     "carla":"Carla, Zuri y Atteneri",
     "zuri":"Carla, Zuri y Atteneri",
     "atteneri":"Carla, Zuri y Atteneri",
-
     "claudia":"Claudia, Candela y Martina",
     "candela":"Claudia, Candela y Martina",
     "martina":"Claudia, Candela y Martina",
-
     "ainara":"Ainara, Sara e Isis",
     "sara":"Ainara, Sara e Isis",
     "isis":"Ainara, Sara e Isis",
-
     "marta":"Marta, Aitana y Leire",
     "aitana":"Marta, Aitana y Leire",
     "leire":"Marta, Aitana y Leire",
-
     "sofia":"Sofia, Helena y Alicia",
     "helena":"Sofia, Helena y Alicia",
     "elena":"Sofia, Helena y Alicia",
     "alicia":"Sofia, Helena y Alicia",
-
     "javi":"Javi y Martina"
 }
 
-// Intervalos para grupo 1 (lunes a viernes 18:00 a 21:00)
-var intervalosGrupo1 = [
-    {inicio:"2026-03-22", fin:"2026-03-26"}, // ejemplo de lunes a viernes
-    {inicio:"2026-03-29", fin:"2026-04-02"}  // otro lunes a viernes
-]
-
-// Función para contar días de semana entre dos fechas
-function diasSemana(inicio, fin){
-    var count = 0
-    var fecha = new Date(inicio)
-    var fechaFin = new Date(fin)
-    while(fecha <= fechaFin){
-        var dia = fecha.getDay() // 0=domingo,6=sabado
-        if(dia != 0 && dia != 6){
-            count++
-        }
-        fecha.setDate(fecha.getDate()+1)
-    }
-    return count
+// Intervalos por grupo
+var intervalosGrupos = {
+    "1_2":[
+        {dias:[1,2,4,5], inicio:"18:00", fin:"21:00"},
+        {dias:[6], inicio:"11:00", fin:"14:00"}
+    ],
+    "3_4_5_6":[
+        {dias:[2,4,5], inicio:"18:00", fin:"21:00"},
+        {dias:[6], inicio:"11:00", fin:"14:00"}
+    ]
 }
 
-// Sumar todos los días de semana de los intervalos del grupo 1
-function sumaIntervalosGrupo1(){
-    var suma = 0
-    for(var i=0;i<intervalosGrupo1.length;i++){
-        suma += diasSemana(intervalosGrupo1[i].inicio, intervalosGrupo1[i].fin)
-    }
-    return suma
-}
-
-// Función Levenshtein para calcular similitud
+// Levenshtein
 function similitud(a,b){
     var distancia = levenshtein(a,b)
     var max = Math.max(a.length,b.length)
@@ -139,31 +117,81 @@ function levenshtein(a,b){
     return matriz[b.length][a.length]
 }
 
+var mostrarIntervalo = false
+var grupoActual = ""
+
+// Convierte segundos a HH:MM:SS
+function segundosAHHMMSS(segundos){
+    var hh = Math.floor(segundos/3600).toString().padStart(2,'0')
+    var mm = Math.floor((segundos%3600)/60).toString().padStart(2,'0')
+    var ss = (segundos%60).toString().padStart(2,'0')
+    return hh + ":" + mm + ":" + ss
+}
+
+// Calcula segundos restantes en un intervalo futuro hasta fecha limite
+function segundosRestantesIntervalos(fechaLimite, diasSemanaPermitidos, intervalo){
+    var ahora = new Date();
+    var totalSegs = 0;
+    var fechaActual = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 0,0,0);
+    while(fechaActual <= fechaLimite){
+        var dia = fechaActual.getDay()
+        if(diasSemanaPermitidos.includes(dia)){
+            var partesInicio = intervalo.inicio.split(":");
+            var partesFin = intervalo.fin.split(":");
+            var inicioSegs = parseInt(partesInicio[0])*3600 + parseInt(partesInicio[1])*60;
+            var finSegs = parseInt(partesFin[0])*3600 + parseInt(partesFin[1])*60;
+
+            if(fechaActual.toDateString() == ahora.toDateString()){
+                var ahoraSegs = ahora.getHours()*3600 + ahora.getMinutes()*60 + ahora.getSeconds();
+                inicioSegs = Math.max(inicioSegs, ahoraSegs);
+            }
+
+            if(inicioSegs < finSegs){
+                totalSegs += finSegs - inicioSegs;
+            }
+        }
+        fechaActual.setDate(fechaActual.getDate()+1);
+    }
+    return totalSegs;
+}
+
 // Función al pulsar Entrar
 function iniciar(){
     var nombre = document.getElementById("nombre").value.toLowerCase()
+    mostrarIntervalo = false
+    grupoActual = ""
+
     for(var persona in lista){
         var porcentaje = similitud(nombre, persona)
         if(porcentaje>=0.9){
             document.getElementById("mensaje").innerText = lista[persona]
-            // Si pertenece al grupo 1, mostrar contador extra
-            if(persona=="carla" || persona=="zuri" || persona=="atteneri"){
-                var diasTotales = sumaIntervalosGrupo1()
-                document.getElementById("contadorExtra").innerText = "Días de semana totales: " + diasTotales
-            } else {
-                document.getElementById("contadorExtra").innerText = ""
+
+            if(["carla","zuri","atteneri","claudia","candela","martina"].includes(persona)){
+                grupoActual = "1_2"
+                mostrarIntervalo = true
+            } else if(["ainara","sara","isis","marta","aitana","leire","sofia","helena","elena","alicia","javi"].includes(persona)){
+                grupoActual = "3_4_5_6"
+                mostrarIntervalo = true
             }
+
+            // Calcular segundos totales restantes de todos los intervalos hasta la fecha límite
+            var segundosTotales = 0;
+            intervalosGrupos[grupoActual].forEach(function(intervalo){
+                segundosTotales += segundosRestantesIntervalos(new Date(fechaObjetivo), intervalo.dias, intervalo);
+            });
+            document.getElementById("relojIntervalo").innerText = segundosAHHMMSS(segundosTotales);
+
             return
         }
     }
     document.getElementById("mensaje").innerText = ""
-    document.getElementById("contadorExtra").innerText = ""
+    document.getElementById("relojIntervalo").innerText = ""
 }
 
 // Actualización cada segundo
 function actualizar(){
     var ahora = new Date()
-    // reloj digital
+    // reloj digital normal
     var h = ahora.getHours().toString().padStart(2,'0')
     var m = ahora.getMinutes().toString().padStart(2,'0')
     var s = ahora.getSeconds().toString().padStart(2,'0')

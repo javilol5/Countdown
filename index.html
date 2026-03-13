@@ -165,7 +165,7 @@ function iniciar(){
     var encontrado = false;
 
     for(var persona in lista){
-        if(similitud(nombre, persona) >= 0.6){
+        if(similitud(nombre, persona) >= 0.9){
             encontrado = true;
             document.getElementById("mensaje").innerText = lista[persona];
 

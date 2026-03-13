@@ -18,21 +18,22 @@ input{
 button{
     padding:10px 15px;
     font-size:16px;
-}
-.reloj{
-    font-size:70px;
-    letter-spacing:4px;
-    margin-top:30px;
+    margin-left:5px;
 }
 .intervalo{
-    font-size:35px;
+    font-size:55px;
     margin-top:20px;
-    color:#00e5ff;
+    color:#008000;
 }
 #mensaje{
     margin-top:20px;
     font-size:20px;
     color:#ffd54f;
+}
+#contadorTitulo, #intervaloTitulo {
+    font-size:25px;
+    margin-top:20px;
+    color:#ffffff;
 }
 #relojIntervalo{
     font-size:60px;
@@ -43,20 +44,22 @@ button{
 </head>
 <body>
 
-<h2>Reloj Digital y Reloj por Intervalos</h2>
+<h2>Cuenta atras Open Madrid Acro</h2>
 
 <input id="nombre" placeholder="Tu nombre">
 <button onclick="iniciar()">Entrar</button>
 
 <div id="mensaje"></div>
 
-<div class="reloj" id="reloj"></div>
-<div class="intervalo" id="contador"></div>
-<div class="reloj" id="relojIntervalo"></div>
+<div class="intervalo" id="contadorTitulo" style="display:none">Cuenta atrás hasta el OPEN de Madrid</div>
+<div class="intervalo" id="contador" style="display:none"></div>
+
+<div class="intervalo" id="intervaloTitulo" style="display:none">Horas restantes de entreno</div>
+<div class="reloj" id="relojIntervalo" style="display:none"></div>
 
 <script>
 // Fecha objetivo
-var fechaObjetivo = new Date("March 28, 2026 13:00:00").getTime()
+var fechaObjetivo = new Date("March 27, 2026 13:00:00").getTime()
 
 // Lista de nombres y mensajes
 var lista = {
@@ -72,10 +75,10 @@ var lista = {
     "marta":"Marta, Aitana y Leire",
     "aitana":"Marta, Aitana y Leire",
     "leire":"Marta, Aitana y Leire",
-    "sofia":"Sofia, Helena y Alicia",
+    "sofia":"Sofia, Elena y Alicia",
     "helena":"Sofia, Helena y Alicia",
-    "elena":"Sofia, Helena y Alicia",
-    "alicia":"Sofia, Helena y Alicia",
+    "elena":"Sofia, Elena y Alicia",
+    "alicia":"Sofia, Elena y Alicia",
     "javi":"Javi y Martina"
 }
 
@@ -117,8 +120,6 @@ function levenshtein(a,b){
     return matriz[b.length][a.length]
 }
 
-var mostrarIntervalo = false
-var grupoActual = ""
 
 // Convierte segundos a HH:MM:SS
 function segundosAHHMMSS(segundos){
@@ -128,7 +129,7 @@ function segundosAHHMMSS(segundos){
     return hh + ":" + mm + ":" + ss
 }
 
-// Calcula segundos restantes en un intervalo futuro hasta fecha limite
+// Calcula segundos restantes en intervalos futuros
 function segundosRestantesIntervalos(fechaLimite, diasSemanaPermitidos, intervalo){
     var ahora = new Date();
     var totalSegs = 0;
@@ -155,49 +156,63 @@ function segundosRestantesIntervalos(fechaLimite, diasSemanaPermitidos, interval
     return totalSegs;
 }
 
-// Función al pulsar Entrar
+// Variable global para reloj de intervalos
+var grupoActual = "";
+var segundosIntervalo = 0;
+
+// Función al pulsar Entrar o Enter
 function iniciar(){
-    var nombre = document.getElementById("nombre").value.toLowerCase()
-    mostrarIntervalo = false
-    grupoActual = ""
+    var nombreInput = document.getElementById("nombre").value;
+    var nombre = nombreInput.toLowerCase();
+    var encontrado = false;
 
     for(var persona in lista){
-        var porcentaje = similitud(nombre, persona)
-        if(porcentaje>=0.9){
-            document.getElementById("mensaje").innerText = lista[persona]
+        if(similitud(nombre, persona) >= 0.9){
+            encontrado = true;
+            document.getElementById("mensaje").innerText = lista[persona];
 
             if(["carla","zuri","atteneri","claudia","candela","martina"].includes(persona)){
-                grupoActual = "1_2"
-                mostrarIntervalo = true
+                grupoActual = "1_2";
             } else if(["ainara","sara","isis","marta","aitana","leire","sofia","helena","elena","alicia","javi"].includes(persona)){
-                grupoActual = "3_4_5_6"
-                mostrarIntervalo = true
+                grupoActual = "3_4_5_6";
             }
 
-            // Calcular segundos totales restantes de todos los intervalos hasta la fecha límite
-            var segundosTotales = 0;
-            intervalosGrupos[grupoActual].forEach(function(intervalo){
-                segundosTotales += segundosRestantesIntervalos(new Date(fechaObjetivo), intervalo.dias, intervalo);
-            });
-            document.getElementById("relojIntervalo").innerText = segundosAHHMMSS(segundosTotales);
+            // Mostrar textos y relojes
+            document.getElementById("contadorTitulo").style.display="block";
+            document.getElementById("contador").style.display="block";
+            document.getElementById("intervaloTitulo").style.display="block";
+            document.getElementById("relojIntervalo").style.display="block";
 
-            return
+            // Calcular segundos totales iniciales
+            segundosIntervalo = 0;
+            intervalosGrupos[grupoActual].forEach(function(intervalo){
+                segundosIntervalo += segundosRestantesIntervalos(new Date(fechaObjetivo), intervalo.dias, intervalo);
+            });
+            document.getElementById("relojIntervalo").innerText = segundosAHHMMSS(segundosIntervalo);
+            return;
         }
     }
-    document.getElementById("mensaje").innerText = ""
-    document.getElementById("relojIntervalo").innerText = ""
+
+    if(!encontrado){
+        document.getElementById("mensaje").innerText = "El nombre '" + nombreInput + "' no está en la lista";
+        // Ocultar relojes y textos
+        document.getElementById("contadorTitulo").style.display="none";
+        document.getElementById("contador").style.display="none";
+        document.getElementById("intervaloTitulo").style.display="none";
+        document.getElementById("relojIntervalo").style.display="none";
+    }
 }
 
-// Actualización cada segundo
+// Listener para Enter
+document.getElementById("nombre").addEventListener("keyup", function(event){
+    if(event.key === "Enter"){
+        iniciar();
+    }
+});
+
+// Cuenta atrás normal
 function actualizar(){
     var ahora = new Date()
-    // reloj digital normal
-    var h = ahora.getHours().toString().padStart(2,'0')
-    var m = ahora.getMinutes().toString().padStart(2,'0')
-    var s = ahora.getSeconds().toString().padStart(2,'0')
-    document.getElementById("reloj").innerText = h + ":" + m + ":" + s
-
-    // cuenta atrás
     var diferencia = fechaObjetivo - ahora.getTime()
     var dias = Math.floor(diferencia / (1000*60*60*24))
     var horas = Math.floor((diferencia % (1000*60*60*24)) / (1000*60*60))
@@ -205,8 +220,37 @@ function actualizar(){
     var segundos = Math.floor((diferencia % (1000*60)) / 1000)
     document.getElementById("contador").innerText = dias + "d " + horas + "h " + minutos + "m " + segundos + "s"
 }
+setInterval(actualizar,1000);
 
-setInterval(actualizar,1000)
+// Función para verificar si estamos dentro de un intervalo
+function dentroIntervalo(grupo){
+    var ahora = new Date();
+    var dia = ahora.getDay();
+    var segundosHoy = ahora.getHours()*3600 + ahora.getMinutes()*60 + ahora.getSeconds();
+
+    var intervalos = intervalosGrupos[grupo];
+    for(var i=0;i<intervalos.length;i++){
+        if(intervalos[i].dias.includes(dia)){
+            var partesInicio = intervalos[i].inicio.split(":");
+            var partesFin = intervalos[i].fin.split(":");
+            var inicioSegs = parseInt(partesInicio[0])*3600 + parseInt(partesInicio[1])*60;
+            var finSegs = parseInt(partesFin[0])*3600 + parseInt(partesFin[1])*60;
+            if(segundosHoy >= inicioSegs && segundosHoy <= finSegs){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Reloj de intervalos que baja solo durante los intervalos
+setInterval(function(){
+    if(segundosIntervalo > 0 && dentroIntervalo(grupoActual)){
+        segundosIntervalo--;
+        document.getElementById("relojIntervalo").innerText = segundosAHHMMSS(segundosIntervalo);
+    }
+},1000);
+
 </script>
 </body>
 </html>

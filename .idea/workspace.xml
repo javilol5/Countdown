@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebce573f-21a7-4c8b-aed4-7d3436a608f4" name="Changes" comment="relog digital" />
+    <list default="true" id="ebce573f-21a7-4c8b-aed4-7d3436a608f4" name="Changes" comment="lista medio actualizada">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,7 +91,23 @@
       <option name="project" value="LOCAL" />
       <updated>1773391927445</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="90% nombre">
+      <option name="closed" value="true" />
+      <created>1773393016446</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1773393016446</updated>
+    </task>
+    <task id="LOCAL-00006" summary="lista medio actualizada">
+      <option name="closed" value="true" />
+      <created>1773393169272</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1773393169272</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -96,6 +115,8 @@
     <MESSAGE value="tiempo consciente" />
     <MESSAGE value="nombres distintos" />
     <MESSAGE value="relog digital" />
-    <option name="LAST_COMMIT_MESSAGE" value="relog digital" />
+    <MESSAGE value="90% nombre" />
+    <MESSAGE value="lista medio actualizada" />
+    <option name="LAST_COMMIT_MESSAGE" value="lista medio actualizada" />
   </component>
 </project>

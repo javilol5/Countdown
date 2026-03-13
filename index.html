@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cuenta atrás</title>
+</head>
+<body>
+
+<h2>Cuenta atrás personalizada</h2>
+
+<label>Escribe tu nombre:</label>
+<input type="text" id="nombre">
+<button onclick="iniciar()">Empezar</button>
+
+<h1 id="reloj"></h1>
+
+<script>
+
+function iniciar() {
+
+    var nombre = document.getElementById("nombre").value;
+    var tiempo;
+
+    // tiempo según nombre
+    if (nombre == "Ana") {
+        tiempo = 30;
+    } else if (nombre == "Luis") {
+        tiempo = 10;
+    } else if (nombre == "Pedro") {
+        tiempo = 60;
+    } else {
+        tiempo = 20;
+    }
+
+    var contador = setInterval(function() {
+
+        document.getElementById("reloj").innerHTML = tiempo + " segundos";
+
+        tiempo--;
+
+        if (tiempo < 0) {
+            clearInterval(contador);
+            document.getElementById("reloj").innerHTML = "Tiempo terminado";
+        }
+
+    }, 1000);
+
+}
+
+</script>
+
+</body>
+</html>

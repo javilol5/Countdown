@@ -1,8 +1,11 @@
+```html
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
-<title>Cuenta Atras</title>
+<title>Reloj</title>
 
 <style>
 
@@ -73,11 +76,18 @@ function iniciar(){
         "pedro":"Pedro desbloqueó el mensaje secreto"
     }
 
-    if(lista[nombre]){
-        document.getElementById("mensaje").innerText = lista[nombre]
-    } else {
-        document.getElementById("mensaje").innerText = ""
+    for (var persona in lista) {
+
+        var porcentaje = similitud(nombre, persona)
+
+        if (porcentaje >= 0.9) {
+            document.getElementById("mensaje").innerText = lista[persona]
+            return
+        }
+
     }
+
+    document.getElementById("mensaje").innerText = ""
 
 }
 
@@ -105,7 +115,48 @@ function actualizar(){
 
 setInterval(actualizar,1000)
 
+function similitud(a, b) {
+
+    var distancia = levenshtein(a, b)
+    var max = Math.max(a.length, b.length)
+
+    return 1 - distancia / max
+}
+
+function levenshtein(a, b) {
+
+    var matriz = []
+
+    for (var i = 0; i <= b.length; i++) {
+        matriz[i] = [i]
+    }
+
+    for (var j = 0; j <= a.length; j++) {
+        matriz[0][j] = j
+    }
+
+    for (var i = 1; i <= b.length; i++) {
+        for (var j = 1; j <= a.length; j++) {
+
+            if (b.charAt(i-1) == a.charAt(j-1)) {
+                matriz[i][j] = matriz[i-1][j-1]
+            } else {
+                matriz[i][j] = Math.min(
+                    matriz[i-1][j-1] + 1,
+                    matriz[i][j-1] + 1,
+                    matriz[i-1][j] + 1
+                )
+            }
+
+        }
+    }
+
+    return matriz[b.length][a.length]
+}
+
 </script>
 
 </body>
+
 </html>
+```
